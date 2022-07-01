@@ -2,19 +2,17 @@
 import { ref, computed } from 'vue'
 import * as Icons from '@heroicons/vue/solid'
 import { useMotion, slideLeft, slideRight } from '@vueuse/motion'
-import { CarousalDirection } from './types/CarousalDirection'
 import ButtonComponent from './components/ButtonComponent.vue'
 import { useLocalStorage } from './composables/useLocalStorage'
 import { useQueryParam } from './composables/useQueryParam'
 
-const pageSelection = parseInt(useQueryParam('page', 1))
+const pageSelection = parseInt(useQueryParam('page', '1'))
 const slideNumber = useLocalStorage('quran-carousal', 1)
 
 if(pageSelection !== slideNumber.value) {
   slideNumber.value = pageSelection
 }
 
-let direction = ref<CarousalDirection>(CarousalDirection.Increasing)
 let carousal = ref<HTMLElement>()
 
 function prevSlide(){
@@ -22,12 +20,8 @@ function prevSlide(){
     return
   }
 
-  direction.value = CarousalDirection.Decreasing
   slideNumber.value--
-  useMotion(
-    carousal,
-    direction.value === CarousalDirection.Increasing ? slideLeft : slideRight
-  )
+  useMotion(carousal, slideRight)
 }
 
 function nextSlide(){
@@ -35,17 +29,13 @@ function nextSlide(){
     return
   }
 
-  direction.value = CarousalDirection.Increasing
   slideNumber.value++
-  useMotion(
-    carousal,
-    direction.value === CarousalDirection.Increasing ? slideLeft : slideRight
-  )
+  useMotion(carousal, slideRight)
 }
 
 const imgUrl = computed(() => {
   let formattedSlideNumber = slideNumber.value.toString().padStart(3, '0')
-  return new URL(`./assets/quran-pages/${formattedSlideNumber}.svg`, import.meta.url)
+  return new URL(`./assets/quran-pages/${formattedSlideNumber}.svg`, import.meta.url).toString()
 })
 
 </script>
