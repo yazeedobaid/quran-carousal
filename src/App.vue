@@ -5,8 +5,14 @@ import { useMotion, slideLeft, slideRight } from '@vueuse/motion'
 import { CarousalDirection } from './types/CarousalDirection'
 import ButtonComponent from './components/ButtonComponent.vue'
 import { useLocalStorage } from './composables/useLocalStorage'
+import { useQueryParam } from './composables/useQueryParam'
 
+const pageSelection = parseInt(useQueryParam('page', 1))
 const slideNumber = useLocalStorage('quran-carousal', 1)
+
+if(pageSelection !== slideNumber.value) {
+  slideNumber.value = pageSelection
+}
 
 let direction = ref<CarousalDirection>(CarousalDirection.Increasing)
 let carousal = ref<HTMLElement>()
