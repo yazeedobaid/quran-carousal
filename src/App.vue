@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import * as Icons from '@heroicons/vue/solid'
-import { useMotion } from '@vueuse/motion'
+import { useMotion, slideLeft, slideRight } from '@vueuse/motion'
 import { CarousalDirection } from './types/CarousalDirection'
 import ButtonComponent from './components/ButtonComponent.vue'
-import { slideLeft, slideRight } from '@vueuse/motion'
+import { useLocalStorage } from './composables/useLocalStorage'
 
-let slideNumber = ref<number>(1)
+const slideNumber = useLocalStorage('quran-carousal', 1)
+
 let direction = ref<CarousalDirection>(CarousalDirection.Increasing)
 let carousal = ref<HTMLElement>()
 
