@@ -1,21 +1,72 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, computed } from 'vue'
+import * as Icons from '@heroicons/vue/solid'
+import { useMotion } from '@vueuse/motion'
+import { CarousalDirection } from './types/CarousalDirection'
+import ButtonComponent from './components/ButtonComponent.vue'
+import { slideLeft, slideRight } from '@vueuse/motion'
+
+let slideNumber = ref<number>(1)
+let direction = ref<CarousalDirection>(CarousalDirection.Increasing)
+let carousal = ref<HTMLElement>()
+
+function prevSlide(){
+  if(slideNumber.value === 1) {
+    return
+  }
+
+  direction.value = CarousalDirection.Decreasing
+  slideNumber.value--
+  useMotion(
+    carousal,
+    direction.value === CarousalDirection.Increasing ? slideLeft : slideRight
+  )
+}
+
+function nextSlide(){
+  if(slideNumber.value === 604) {
+    return
+  }
+
+  direction.value = CarousalDirection.Increasing
+  slideNumber.value++
+  useMotion(
+    carousal,
+    direction.value === CarousalDirection.Increasing ? slideLeft : slideRight
+  )
+}
+
+const imgUrl = computed(() => {
+  let formattedSlideNumber = slideNumber.value.toString().padStart(3, '0')
+  return new URL(`./assets/quran-pages/${formattedSlideNumber}.svg`, import.meta.url)
+})
+
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <div class="flex justify-between items-center min-h-screen text-white">
+    <div>
+      <button-component @click="prevSlide">
+        <Icons.ChevronLeftIcon class="h-10 w-10" />
+      </button-component>
+    </div>
+    <div class="flex flex-1 items-center justify-center min-h-screen overflow-hidden">
+      <div  ref="carousal"
+            class="flex items-center justify-center min-h-screen w-full overflow-hidden">
+        <img
+          class="fill-current bg-white text-gray-900 w-full h-screen"
+          :class="slideNumber % 2 != 0 ? 'ml-[120px]' : ''" 
+          :src="imgUrl" 
+        />
+      </div>
+    </div>
+    <div>
+      <button-component @click="nextSlide">
+        <Icons.ChevronRightIcon class="h-10 w-10" />
+      </button-component>
+    </div>
+    <div>
+  </div>
+    
+  </div>  
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
