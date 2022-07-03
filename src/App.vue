@@ -41,27 +41,27 @@ const imgUrl = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center items-center min-h-screen text-white md:flex-row md:justify-between">
+  <div class="flex flex-col justify-between items-center w-screen min-h-full h-full text-white md:flex-row md:justify-between">
     <div class="hidden md:block">
       <button-component @click="prevSlide">
         <Icons.ChevronLeftIcon class="h-10 w-10"/>
       </button-component>
     </div>
-    <div ref="carousal" class="w-screen md:h-screen md:flex-1">
-      <img class="inset-0 w-full h-screen fill-current bg-white text-gray-900" :src="imgUrl"/>
+    <div ref="carousal">
+      <img class="fill-current bg-white text-gray-900" :src="imgUrl"/>
     </div>
     <div class="hidden md:block">
       <button-component @click="nextSlide">
         <Icons.ChevronRightIcon class="h-10 w-10"/>
       </button-component>
     </div>
-    <div class="block md:hidden flex w-full">
-      <div class="bg-gray-100 w-1/2 flex justify-center">
+    <div class="block md:hidden flex w-full fixed bottom-0">
+      <div class="w-1/2 flex justify-center">
         <button-component @click="prevSlide">
           <Icons.ChevronLeftIcon class="h-10 w-10"/>
         </button-component>
       </div>
-      <div class="bg-gray-100 w-1/2 flex justify-center">
+      <div class="w-1/2 flex justify-center">
         <button-component @click="nextSlide">
           <Icons.ChevronRightIcon class="h-10 w-10"/>
         </button-component>
