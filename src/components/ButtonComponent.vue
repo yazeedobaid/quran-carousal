@@ -3,10 +3,9 @@ defineEmits(['click'])
 </script>
 
 <template>
-<button 
-    class="min-h-screen text-gray-300 cursor-pointer hover:text-gray-400" 
-    @click="$emit('click')"
->
-    <slot  />
-</button>
+  <button
+      class="md:min-h-screen text-gray-300 cursor-pointer hover:text-gray-400"
+      @click="$emit('click')">
+    <slot/>
+  </button>
 </template>
