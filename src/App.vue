@@ -42,7 +42,7 @@ const imgUrl = computed(() => {
 
 <template>
   <div class="flex flex-col justify-between items-center w-screen min-h-full h-full text-white md:flex-row md:justify-between">
-    <div class="hidden md:block">
+    <div class="hidden md:block touch-manipulation">
       <button-component @click="prevSlide">
         <Icons.ChevronLeftIcon class="h-10 w-10"/>
       </button-component>
@@ -50,12 +50,12 @@ const imgUrl = computed(() => {
     <div ref="carousal">
       <img class="fill-current bg-white text-gray-900" :src="imgUrl"/>
     </div>
-    <div class="hidden md:block">
+    <div class="hidden md:block touch-manipulation">
       <button-component @click="nextSlide">
         <Icons.ChevronRightIcon class="h-10 w-10"/>
       </button-component>
     </div>
-    <div class="block md:hidden flex w-full fixed bottom-0">
+    <div class="block md:hidden flex w-full fixed bottom-0 touch-manipulation">
       <div class="w-1/2 flex justify-center">
         <button-component @click="prevSlide">
           <Icons.ChevronLeftIcon class="h-10 w-10"/>
