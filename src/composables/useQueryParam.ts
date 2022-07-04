@@ -1,4 +1,4 @@
-export function useQueryParam(paramName: string, defaultValue: string) {
+export function useQueryParam(paramName: string) {
   let queryParamValue = window.location.search
     .substring(1)
     .split("&")
@@ -6,7 +6,7 @@ export function useQueryParam(paramName: string, defaultValue: string) {
     .filter((param) => param[0] === paramName)[0];
 
   if (!queryParamValue || !Array.isArray(queryParamValue)) {
-    return defaultValue;
+    return null;
   }
 
   return queryParamValue[1];

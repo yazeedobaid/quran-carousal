@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import * as Icons from "@heroicons/vue/solid";
-import { useMotion, slideLeft, slideRight } from "@vueuse/motion";
+import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/vue/solid";
+import { useMotion, slideRight, Variant } from "@vueuse/motion";
 import ButtonComponent from "./components/ButtonComponent.vue";
 import { useLocalStorage } from "./composables/useLocalStorage";
 import { useQueryParam } from "./composables/useQueryParam";
+import { onKeyStroke } from "@vueuse/core";
 
-const pageSelection = parseInt(useQueryParam("page", "1"));
+const pageSelection = useQueryParam("page");
 const slideNumber = useLocalStorage("quran-carousal", 1);
 
-if (pageSelection !== slideNumber.value) {
-  slideNumber.value = pageSelection;
+if (pageSelection && pageSelection !== slideNumber.value) {
+  slideNumber.value = parseInt(pageSelection);
 }
 
 let carousal = ref<HTMLElement>();
+let carousalMotion = useMotion(carousal, slideRight);
 
 function prevSlide() {
   if (slideNumber.value === 1) {
@@ -21,16 +23,19 @@ function prevSlide() {
   }
 
   slideNumber.value--;
-  useMotion(carousal, slideRight);
+  carousalMotion.stop()
+  carousalMotion.apply(slideRight.enter as Variant)
 }
 
-function nextSlide() {
+async function nextSlide() {
   if (slideNumber.value === 604) {
     return;
   }
 
   slideNumber.value++;
-  useMotion(carousal, slideLeft);
+  carousalMotion.stop()
+  await carousalMotion.apply(slideRight.initial as Variant)
+  await carousalMotion.apply(slideRight.enter as Variant)
 }
 
 const imgUrl = computed(() => {
@@ -40,6 +45,9 @@ const imgUrl = computed(() => {
     import.meta.url
   ).toString();
 });
+
+onKeyStroke('ArrowLeft', prevSlide)
+onKeyStroke('ArrowRight', nextSlide)
 </script>
 
 <template>
@@ -48,26 +56,26 @@ const imgUrl = computed(() => {
   >
     <div class="hidden touch-manipulation md:block">
       <button-component @click="prevSlide">
-        <Icons.ChevronLeftIcon class="h-10 w-10" />
+        <ChevronLeftIcon class="h-10 w-10" />
       </button-component>
     </div>
     <div ref="carousal">
-      <img class="bg-white fill-current text-gray-900" :src="imgUrl" />
+      <img class="bg-white fill-current text-gray-900" :src="imgUrl"  :alt="'quran page' + slideNumber"/>
     </div>
     <div class="hidden touch-manipulation md:block">
       <button-component @click="nextSlide">
-        <Icons.ChevronRightIcon class="h-10 w-10" />
+        <ChevronRightIcon class="h-10 w-10" />
       </button-component>
     </div>
     <div class="fixed bottom-0 block flex w-full touch-manipulation md:hidden">
       <div class="flex w-1/2 justify-center">
         <button-component @click="prevSlide">
-          <Icons.ChevronLeftIcon class="h-10 w-10" />
+          <ChevronLeftIcon class="h-10 w-10" />
         </button-component>
       </div>
       <div class="flex w-1/2 justify-center">
         <button-component @click="nextSlide">
-          <Icons.ChevronRightIcon class="h-10 w-10" />
+          <ChevronRightIcon class="h-10 w-10" />
         </button-component>
       </div>
     </div>
